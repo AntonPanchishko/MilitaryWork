@@ -18,7 +18,7 @@ public class MilitaryUnit {
     private int totalWorkDays;
     private int weekWorkDay;
     private int involvingProcent;
-    private UnitStatus unitStatus;
+    private int unitStatus;
 
     @OneToMany(mappedBy = "militaryUnit", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WorkDay> workDays;
@@ -68,11 +68,11 @@ public class MilitaryUnit {
         this.involvingProcent = involvingProcent;
     }
 
-    public UnitStatus getUnitStatus() {
+    public int getUnitStatus() {
         return unitStatus;
     }
 
-    public void setUnitStatus(UnitStatus unitStatus) {
+    public void setUnitStatus(int unitStatus) {
         this.unitStatus = unitStatus;
     }
 }

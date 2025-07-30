@@ -5,10 +5,13 @@ import org.example.entity.MilitaryUnit;
 import org.example.entity.WorkDay;
 import org.example.jpa.MilitaryUnitRepository;
 import org.example.jpa.WorkDayRepository;
+import org.example.mapper.MilitaryMapper;
 import org.example.service.interf.UnitProviderService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,16 +21,25 @@ import java.util.stream.Collectors;
 public class UnitProviderServiceImpl implements UnitProviderService {
     private final WorkDayRepository workDayRepository;
     private final MilitaryUnitRepository militaryUnitRepository;
+    private final MilitaryMapper mapper;
 
-    public UnitProviderServiceImpl(WorkDayRepository workDayRepository, MilitaryUnitRepository militaryUnitRepository) {
+    public UnitProviderServiceImpl(WorkDayRepository workDayRepository, MilitaryUnitRepository militaryUnitRepository, MilitaryMapper mapper) {
         this.workDayRepository = workDayRepository;
         this.militaryUnitRepository = militaryUnitRepository;
+        this.mapper = mapper;
     }
 
     @Override
     public List<MilitaryUnitDto> getWorkUnits(int amount) {
         List<MilitaryUnit> units = militaryUnitRepository.getAllAvailableUnitList();
-        Map<Long, List<WorkDay>> dayMap = workDayRepository.findAll()
+        LocalDate today = LocalDate.now();
+
+        LocalDate startOfWeek = today.with(DayOfWeek.MONDAY);
+        LocalDate endOfWeek = today.with(DayOfWeek.SUNDAY);
+
+        Map<Long, List<WorkDay>> dayMap = workDayRepository.getAllWorkDayThisWeek(
+                startOfWeek, endOfWeek
+                )
                 .stream()
                 .collect(Collectors.groupingBy(d -> d.getMilitaryUnit().getId()));
         HashMap<Long, Integer> map = new HashMap<>();
@@ -50,11 +62,8 @@ public class UnitProviderServiceImpl implements UnitProviderService {
                         .stream()
                         .map(Map.Entry::getKey)
                         .toList()
-        ).stream().map(e -> {
-            MilitaryUnitDto mu = new MilitaryUnitDto();
-            mu.setId(e.getId());
-            mu.setLastName(e.getLastName());
-            return mu;
-        }).toList();
+                ).stream()
+                .map(mapper::fromEntityToDto)
+                .toList();
     }
 }

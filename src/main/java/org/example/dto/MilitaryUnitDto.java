@@ -1,23 +1,15 @@
 package org.example.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class MilitaryUnitDto {
     private Long id;
+    private String name;
     private String lastName;
-
-    // Геттери/Сеттери
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+    private int totalWorkDays;
+    private int weekWorkDay;
+    private int involvingProcent;
 }

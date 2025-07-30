@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header('Результат операції')"></head>
+<body class="container mt-4">
+<h2 class="mb-4">Результат операції</h2>
+
+<p th:text="${message}">Операція виконана успішно.</p>
+
+<a href="/" class="btn btn-secondary mt-3">На головну</a>
+
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

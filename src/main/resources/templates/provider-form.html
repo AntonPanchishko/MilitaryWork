@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header('Запит на отримання Military Units')"></head>
+<body class="container mt-4">
+<h2 class="mb-4">Запит на отримання Military Units</h2>
+
+<form method="post" action="/ui/provider" class="mb-3">
+  <div class="input-group">
+    <input type="number" name="amount" class="form-control" placeholder="Кількість units" required>
+    <button type="submit" class="btn btn-success">Отримати</button>
+  </div>
+</form>
+
+<a href="/" class="btn btn-secondary">На головну</a>
+
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

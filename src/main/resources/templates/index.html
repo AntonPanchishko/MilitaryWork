@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header('Головна сторінка')"></head>
+<body class="container mt-4">
+
+<h1 class="mb-4">Головна сторінка</h1>
+
+<div class="d-grid gap-3">
+  <a href="/ui/units" class="btn btn-primary">Всі Military Units</a>
+  <a href="/ui/work-days" class="btn btn-secondary">Всі Work Days</a>
+  <form method="post" action="/ui/import">
+    <button type="submit" class="btn btn-warning">Імпортувати з Airtable</button>
+  </form>
+  <form method="post" action="/ui/provider" class="mt-3">
+    <div class="input-group">
+      <input type="number" name="amount" class="form-control" placeholder="Скільки units?">
+      <button type="submit" class="btn btn-success">Отримати units</button>
+    </div>
+  </form>
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

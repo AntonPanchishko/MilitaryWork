@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header('Work Days')"></head>
+<body class="container mt-4">
+<h2 class="mb-4">Work Days</h2>
+
+<table class="table table-striped table-hover">
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Дата</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="w : ${workDays}">
+    <td th:text="${w.id}"></td>
+    <td th:text="${w.workDate}"></td>
+  </tr>
+  </tbody>
+</table>
+
+<a href="/" class="btn btn-secondary mt-3">На головну</a>
+
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>
