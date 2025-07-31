@@ -12,9 +12,11 @@ import org.springframework.util.CollectionUtils;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,30 +40,54 @@ public class UnitProviderServiceImpl implements UnitProviderService {
         LocalDate endOfWeek = today.with(DayOfWeek.SUNDAY);
 
         Map<Long, List<WorkDay>> dayMap = workDayRepository.getAllWorkDayThisWeek(
-                startOfWeek, endOfWeek
+                        startOfWeek, endOfWeek
                 )
                 .stream()
                 .collect(Collectors.groupingBy(d -> d.getMilitaryUnit().getId()));
-        HashMap<Long, Integer> map = new HashMap<>();
+        HashMap<Long, List<WorkDay>> map = new HashMap<>();
         for (MilitaryUnit unit : units) {
             List<WorkDay> unitWorkDayList = dayMap.get(unit.getId());
             if (CollectionUtils.isEmpty(unitWorkDayList)) {
-                map.put(unit.getId(), 0);
+                map.put(unit.getId(), new ArrayList<>());
             } else {
-                map.put(unit.getId(), unitWorkDayList.size());
+                map.put(unit.getId(), unitWorkDayList);
             }
         }
-        List<Map.Entry<Long, Integer>> smallestFive = map.entrySet()
+        List<Map.Entry<Long, List<WorkDay>>> smallestFive = map.entrySet()
                 .stream()
-                .sorted(Map.Entry.comparingByValue())
+                .sorted((e1, e2) -> {
+                    int size1 = e1.getValue().size();
+                    int size2 = e2.getValue().size();
+
+                    int cmp = Integer.compare(size1, size2);
+                    if (cmp != 0 && size1 != size2) {
+                        return cmp;
+                    }
+
+                    Optional<LocalDate> minDate1 = e1.getValue().stream()
+                            .map(WorkDay::getWorkDate)
+                            .max(LocalDate::compareTo);
+                    Optional<LocalDate> minDate2 = e2.getValue().stream()
+                            .map(WorkDay::getWorkDate)
+                            .max(LocalDate::compareTo);
+
+                    if (minDate1.isEmpty() && minDate2.isEmpty()) {
+                        return 0;
+                    }
+                    return minDate1.map(
+                                        date -> minDate2.map(date::compareTo
+                                    ).orElse(-1))
+                            .orElse(1);
+
+                })
                 .limit(amount)
                 .toList();
 
         return militaryUnitRepository.findAllById(
-                smallestFive
-                        .stream()
-                        .map(Map.Entry::getKey)
-                        .toList()
+                        smallestFive
+                                .stream()
+                                .map(Map.Entry::getKey)
+                                .toList()
                 ).stream()
                 .map(mapper::fromEntityToDto)
                 .toList();
