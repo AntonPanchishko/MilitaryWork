@@ -47,9 +47,14 @@ public class UiController {
     }
 
     @GetMapping("/ui/import")
-    public String importData(Model model) throws Exception {
-        importService.importData();
-        model.addAttribute("message", "Імпорт завершено успішно!");
+    public String importData(Model model) {
+        try {
+            importService.importData();
+            model.addAttribute("message", "Імпорт завершено успішно!");
+        } catch (Exception e) {
+            model.addAttribute("message", "Помилка: " + e.getMessage());
+            e.printStackTrace();
+        }
         return "result";
     }
 
