@@ -46,7 +46,7 @@ public class UiController {
         return "work-days";
     }
 
-    @PostMapping("/ui/import")
+    @GetMapping("/ui/import")
     public String importData(Model model) throws Exception {
         importService.importData();
         model.addAttribute("message", "Імпорт завершено успішно!");
