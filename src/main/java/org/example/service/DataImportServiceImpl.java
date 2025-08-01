@@ -50,7 +50,7 @@ public class DataImportServiceImpl implements DataImportService {
             JsonObject fields = records.get(i).getAsJsonObject().getAsJsonObject("fields");
             if (fields == null) continue;
 
-            String fullName = fields.get("ПІБ").getAsString();
+            String fullName = safeGetString(fields, "ПІБ");
             if (fullName == null || fullName.trim().isEmpty()) continue;
 
             String[] nameParts = fullName.split(" ");
@@ -102,5 +102,10 @@ public class DataImportServiceImpl implements DataImportService {
             }
         }
         workRepo.saveAll(newWorkDayList);
+    }
+
+    private String safeGetString(JsonObject obj, String key) {
+        JsonElement el = obj.get(key);
+        return (el == null || el.isJsonNull()) ? null : el.getAsString();
     }
 }
