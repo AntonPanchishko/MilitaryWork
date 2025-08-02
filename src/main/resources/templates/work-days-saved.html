@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header('Результат операції')"></head>
+<body class="container mt-4">
+
+<h2 class="mb-4" th:text="${message}">На єбашатню уєбали:</h2>
+
+<table class="table table-striped table-hover" th:if="${units != null and !units.isEmpty()}">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Ім'я</th>
+        <th>Прізвище</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="unit : ${units}">
+        <td th:text="${unit.id}"></td>
+        <td th:text="${unit.name}"></td>
+        <td th:text="${unit.lastName}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<a href="/" class="btn btn-primary">На головну</a>
+
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

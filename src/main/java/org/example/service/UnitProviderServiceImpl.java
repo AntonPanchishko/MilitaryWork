@@ -1,6 +1,7 @@
 package org.example.service;
 
 import org.example.dto.MilitaryUnitDto;
+import org.example.dto.WorkDayDto;
 import org.example.entity.MilitaryUnit;
 import org.example.entity.WorkDay;
 import org.example.jpa.MilitaryUnitRepository;
@@ -89,6 +90,24 @@ public class UnitProviderServiceImpl implements UnitProviderService {
                                 .map(Map.Entry::getKey)
                                 .toList()
                 ).stream()
+                .map(mapper::fromEntityToDto)
+                .toList();
+    }
+
+    @Override
+    public List<WorkDayDto> applyWorkUnit(List<Long> unitIdList) {
+        List<MilitaryUnit> militaryUnitList = militaryUnitRepository.findAllById(unitIdList);
+        List<WorkDay> workDayList = new ArrayList<>();
+        LocalDate now = LocalDate.now();
+        for (MilitaryUnit militaryUnit : militaryUnitList) {
+            WorkDay workDay = new WorkDay();
+            workDay.setWorkDate(now);
+            workDay.setMilitaryUnit(militaryUnit);
+            workDayList.add(workDay);
+        }
+
+        return workDayRepository.saveAll(workDayList)
+                .stream()
                 .map(mapper::fromEntityToDto)
                 .toList();
     }

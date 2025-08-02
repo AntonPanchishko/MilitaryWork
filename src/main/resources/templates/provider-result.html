@@ -4,22 +4,30 @@
 <body class="container mt-4">
 <h2 class="mb-4">Результат Provider</h2>
 
-<table class="table table-striped table-hover">
-  <thead>
-  <tr>
-    <th>ID</th>
-    <th>Ім'я</th>
-    <th>Призвіще</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr th:each="unit : ${units}">
-    <td th:text="${unit.id}"></td>
-    <td th:text="${unit.name}"></td>
-    <td th:text="${unit.lastName}"></td>
-  </tr>
-  </tbody>
-</table>
+<form th:action="@{/ui/save-work-days}" method="post">
+  <table class="table table-striped table-hover">
+    <thead>
+    <tr>
+      <th>Вибрати</th>
+      <th>ID</th>
+      <th>Ім'я</th>
+      <th>Призвіще</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="unit : ${units}">
+      <td>
+        <input type="checkbox" name="unitIds" th:value="${unit.id}">
+      </td>
+      <td th:text="${unit.id}"></td>
+      <td th:text="${unit.name}"></td>
+      <td th:text="${unit.lastName}"></td>
+    </tr>
+    </tbody>
+  </table>
+
+  <button type="submit" class="btn btn-primary mt-3">Попиздували на єбашку</button>
+</form>
 
 <a href="/" class="btn btn-secondary mt-3">На головну</a>
 

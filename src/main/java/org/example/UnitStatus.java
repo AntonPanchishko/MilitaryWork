@@ -11,7 +11,11 @@ public enum UnitStatus {
         this.id = id;
     }
 
-    UnitStatus getUnitStatus(int id) {
+    public int getId() {
+        return id;
+    }
+
+    public static UnitStatus getUnitStatus(int id) {
         return Arrays.stream(UnitStatus.values())
                 .filter(v -> v.id == id).findFirst()
                 .orElse(null);
