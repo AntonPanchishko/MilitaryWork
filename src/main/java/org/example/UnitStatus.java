@@ -3,7 +3,9 @@ package org.example;
 import java.util.Arrays;
 
 public enum UnitStatus {
-    AVAILABLE(1), ON_SICK_LEAVE(2), REMOVED(3);
+    AVAILABLE(1),
+    ON_SICK_LEAVE(2),
+    REMOVED(3);
 
     private final int id;
 

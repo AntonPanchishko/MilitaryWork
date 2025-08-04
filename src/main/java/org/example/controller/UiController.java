@@ -7,6 +7,8 @@ import org.example.jpa.WorkDayRepository;
 import org.example.service.DataImportServiceImpl;
 import org.example.service.interf.MilitaryUnitService;
 import org.example.service.interf.UnitProviderService;
+import org.example.service.interf.WorkDayService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,25 +16,26 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class UiController {
-    private final MilitaryUnitRepository unitRepo;
     private final WorkDayRepository workRepo;
     private final DataImportServiceImpl importService;
     private final UnitProviderService unitProviderService;
     private final MilitaryUnitService militaryUnitService;
+    private final WorkDayService workDayService;
 
-    public UiController(MilitaryUnitRepository unitRepo,
-                        WorkDayRepository workRepo,
+    public UiController(WorkDayRepository workRepo,
                         DataImportServiceImpl importService,
                         UnitProviderService unitProviderService,
-                        MilitaryUnitService militaryUnitService) {
-        this.unitRepo = unitRepo;
+                        MilitaryUnitService militaryUnitService,
+                        WorkDayService workDayService) {
         this.workRepo = workRepo;
         this.importService = importService;
         this.unitProviderService = unitProviderService;
         this.militaryUnitService = militaryUnitService;
+        this.workDayService = workDayService;
     }
 
     @GetMapping("/")
@@ -76,25 +79,43 @@ public class UiController {
         return "provider-result";
     }
 
+    @GetMapping("/ui/new-unit")
+    public String showNewUnitForm() {
+        return "new-unit"; // шаблон new-unit.html
+    }
+
+    @PostMapping("/ui/create-unit")
+    public String createUnit(
+            @RequestParam String lastName,
+            @RequestParam String name,
+            @RequestParam String status) {
+
+        militaryUnitService.createNewUnit(lastName, name, status);
+        return "redirect:/ui/units";
+    }
+
+    // Відкрити форму редагування (id передається з форми через параметр unitId)
+    @GetMapping("/ui/edit-unit")
+    public String editUnit(@RequestParam("unitId") Long unitId, Model model) {
+        MilitaryUnitDto unit = militaryUnitService.getById(unitId);
+        model.addAttribute("unit", unit);
+        return "edit-unit";
+    }
+
+    // Оновити дані юніта
+    @PostMapping("/ui/update-unit")
+    public String updateUnit(
+            @RequestParam Long id,
+            @RequestParam String lastName,
+            @RequestParam String name,
+            @RequestParam String status) {
+        militaryUnitService.updateUnit(id, lastName, name, status);
+        return "redirect:/ui/units";
+    }
+
     @PostMapping("/ui/save-work-days")
-    public String saveWorkDays(
-            @RequestParam(value = "unitIds", required = false) List<Long> unitIds,
-            Model model) {
-
-        if (unitIds == null || unitIds.isEmpty()) {
-            model.addAttribute("message", "Нічого не вибрано!");
-            model.addAttribute("units", List.of());
-            return "work-days-saved";
-        }
-
-        List<MilitaryUnitDto> units = unitProviderService.applyWorkUnit(unitIds)
-                .stream()
-                .map(WorkDayDto::getMilitaryUnit)
-                .toList();
-
-        model.addAttribute("message", "Попиздували на єбашатню");
-        model.addAttribute("units", units);
-
-        return "work-days-saved";
+    public String saveWorkDays(@RequestParam Map<String, String> formParams) {
+        workDayService.saveWorkDay(formParams);
+        return "redirect:/ui/units";
     }
 }

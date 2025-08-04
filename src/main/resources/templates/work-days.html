@@ -9,12 +9,14 @@
   <tr>
     <th>ID</th>
     <th>Дата</th>
+    <th>Призвіще</th>
   </tr>
   </thead>
   <tbody>
   <tr th:each="w : ${workDays}">
     <td th:text="${w.id}"></td>
     <td th:text="${w.workDate}"></td>
+    <td th:text="${w.militaryUnit.lastName}"></td>
   </tr>
   </tbody>
 </table>

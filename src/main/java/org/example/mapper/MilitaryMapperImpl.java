@@ -6,28 +6,33 @@ import org.example.dto.WorkDayDto;
 import org.example.entity.MilitaryUnit;
 import org.example.entity.WorkDay;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
 
 @Component
 public class MilitaryMapperImpl implements MilitaryMapper {
     @Override
-    public MilitaryUnitDto fromEntityToDto(MilitaryUnit unit) {
+    public MilitaryUnitDto fromEntityToDto(MilitaryUnit unit, List<WorkDay> weekWorkDayDtoList, List<WorkDay> workDayDtoList) {
+        int totalWorkDays = CollectionUtils.isEmpty(workDayDtoList) ? 0 : workDayDtoList.size();
+        int weekWorkDay = CollectionUtils.isEmpty(weekWorkDayDtoList) ? 0 : weekWorkDayDtoList.size();
         MilitaryUnitDto mu = new MilitaryUnitDto();
         mu.setId(unit.getId());
         mu.setName(unit.getName());
         mu.setLastName(unit.getLastName());
-        mu.setTotalWorkDays(unit.getTotalWorkDays());
-        mu.setWeekWorkDay(unit.getWeekWorkDay());
-        mu.setInvolvingProcent(unit.getInvolvingProcent());
+        mu.setTotalWorkDays(totalWorkDays);
+        mu.setWeekWorkDay(weekWorkDay);
+        mu.setInvolvingProcent(Math.round((float) weekWorkDay * 100 / 6));
         mu.setUnitStatus(UnitStatus.getUnitStatus(unit.getUnitStatus()));
         return mu;
     }
 
     @Override
-    public WorkDayDto fromEntityToDto(WorkDay day) {
+    public WorkDayDto fromEntityToDto(WorkDay day, List<WorkDay> weekWorkDayDtoList, List<WorkDay> workDayDtoList) {
         WorkDayDto workDayDto = new WorkDayDto();
         workDayDto.setId(day.getId());
         workDayDto.setDate(day.getWorkDate());
-        workDayDto.setMilitaryUnit(fromEntityToDto(day.getMilitaryUnit()));
+        workDayDto.setMilitaryUnit(fromEntityToDto(day.getMilitaryUnit(), weekWorkDayDtoList, workDayDtoList));
         return workDayDto;
     }
 

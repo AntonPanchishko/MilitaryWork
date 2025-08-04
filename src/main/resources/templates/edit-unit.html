@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header('Редагування юніта')"></head>
+<body class="container mt-4">
+
+<h2 class="mb-4">Редагування юніта</h2>
+
+<form th:action="@{/ui/update-unit}" method="post">
+  <input type="hidden" name="id" th:value="${unit.id}"/>
+
+  <div class="mb-3">
+    <label for="lastName" class="form-label">Прізвище</label>
+    <input type="text" id="lastName" name="lastName" class="form-control" th:value="${unit.lastName}" required>
+  </div>
+
+  <div class="mb-3">
+    <label for="name" class="form-label">Ім'я</label>
+    <input type="text" id="name" name="name" class="form-control" th:value="${unit.name}" required>
+  </div>
+
+  <div class="mb-3">
+    <label for="status" class="form-label">Статус</label>
+    <select id="status" name="status" class="form-select" required>
+      <option value="AVAILABLE" th:selected="${unit.unitStatus.name() == 'AVAILABLE'}">AVAILABLE</option>
+      <option value="ON_SICK_LEAVE" th:selected="${unit.unitStatus.name() == 'ON_SICK_LEAVE'}">ON_SICK_LEAVE</option>
+      <option value="REMOVED" th:selected="${unit.unitStatus.name() == 'REMOVED'}">REMOVED</option>
+    </select>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Зберегти зміни</button>
+  <a href="/ui/units" class="btn btn-secondary">Скасувати</a>
+</form>
+
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

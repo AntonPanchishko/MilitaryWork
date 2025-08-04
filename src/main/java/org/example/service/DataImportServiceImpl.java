@@ -68,7 +68,7 @@ public class DataImportServiceImpl implements DataImportService {
                 unit.setName(name);
                 unit.setLastName(lastName);
             }
-            unit.setUnitStatus(fields.get("Лікування(пройоб) чи ровний").getAsInt());
+            unit.setUnitStatus(fields.get("Пройобується(лікується) чи ровний").getAsInt());
 
 // Оновлюємо спільні поля
             unit.setTotalWorkDays(fields.get("Всього з моменту прибуття").getAsInt());

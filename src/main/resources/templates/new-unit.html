@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header('Новий юніт')"></head>
+<body class="container mt-4">
+
+<h2 class="mb-4">Створення нового юніта</h2>
+
+<form th:action="@{/ui/create-unit}" method="post">
+  <div class="mb-3">
+    <label for="lastName" class="form-label">Прізвище</label>
+    <input type="text" id="lastName" name="lastName" class="form-control" required>
+  </div>
+
+  <div class="mb-3">
+    <label for="name" class="form-label">Ім'я</label>
+    <input type="text" id="name" name="name" class="form-control" required>
+  </div>
+
+  <div class="mb-3">
+    <label for="status" class="form-label">Статус</label>
+    <select id="status" name="status" class="form-select" required>
+      <option value="AVAILABLE">AVAILABLE</option>
+      <option value="ON_SICK_LEAVE">ON_SICK_LEAVE</option>
+      <option value="REMOVED">REMOVED</option>
+    </select>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Внести зміни</button>
+  <a href="/" class="btn btn-secondary">Скасувати</a>
+</form>
+
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

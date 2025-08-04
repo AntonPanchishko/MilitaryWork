@@ -90,7 +90,7 @@ public class UnitProviderServiceImpl implements UnitProviderService {
                                 .map(Map.Entry::getKey)
                                 .toList()
                 ).stream()
-                .map(mapper::fromEntityToDto)
+                .map(unit -> mapper.fromEntityToDto(unit, new ArrayList<>(), new ArrayList<>()))
                 .toList();
     }
 
@@ -108,7 +108,7 @@ public class UnitProviderServiceImpl implements UnitProviderService {
 
         return workDayRepository.saveAll(workDayList)
                 .stream()
-                .map(mapper::fromEntityToDto)
+                .map(unit -> mapper.fromEntityToDto(unit, new ArrayList<>(), new ArrayList<>()))
                 .toList();
     }
 }
